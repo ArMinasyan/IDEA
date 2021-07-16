@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using System.Text.RegularExpressions;
 
 namespace IDEA
 {
@@ -52,6 +52,8 @@ namespace IDEA
             string key = txt_Key.Text,
                    str = txt_Text.Text,
                    str2 = "";
+            var regex = new Regex("^[a-zA-Z0-9\u0020]");
+            string error = "";
             int h1 = function(str.Length);
             str = str.PadRight(h1, ' ');
             int[] d = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -59,10 +61,11 @@ namespace IDEA
             {
                 string_to_int(str.Substring(i, 8)).CopyTo(d, 0);
                 str2 += (Encrypt(d, Inverse_KeyGen(KeyGen(key))));
-                
+                if (regex.Match(str2).Length == 0)   error = "Invalid key";     
             }
-                txt_EncDecText.Text = "";
-                txt_EncDecText.Text = str2;
+
+            txt_EncDecText.Text = "";
+            txt_EncDecText.Text = error.Length > 0 ? error : str2.Trim();
         }
 
 
